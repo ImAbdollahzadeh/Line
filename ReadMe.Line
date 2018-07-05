@@ -221,4 +221,9 @@ Formula (including integration and summation, but no fraction support)
 The Concept of Graphical Objects in Line:
 		- 
 		-
-		-
+
+Now that weunderstood how Graphical Objects (or GObject) work, this is the time to explain how to use them in order to make very
+complicated formula.
+We found a generic way of representing any formula based on GObject, so that, one can always show a typical formula as:
+
+S_( d)^( u)   Body
