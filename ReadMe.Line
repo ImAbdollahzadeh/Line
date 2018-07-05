@@ -226,4 +226,37 @@ Now that weunderstood how Graphical Objects (or GObject) work, this is the time 
 complicated formula.
 We found a generic way of representing any formula based on GObject, so that, one can always show a typical formula as:
 
-S_( d)^( u)   Body
+SudB:
+where S is the main symbol of a math expression such as Summation, or fraction, or integral.
+u is the upper object.
+d is the down object.
+and B is the body of the expression.
+the whole SudB is one GObject. u and d are themselves also GObjects which have again their u and d.
+Usually B is a text based math expression without any sophisticated symbol.
+
+The beauty of such a strategy is that one can easily create a formula expression like a Sigma symbol where either of u or d can be
+another formula expression. For clarity consider an integral symbol with up a sigma expression with its own property and down a
+number or even another expression like a fraction and so on.
+
+In the first try in this strategy, we made a simple protocol. In this protocol if the GObject is in Level 0 
+which means is the mother expression, the font sizes of S, u, d, and B are 18, 8, 8, and 12 respectively.
+If the GObject is in Level 1 (for instance the up expression for a mother integral) 
+which means is the child expression, the font sizes of S, u, d, and B are 10, 4, 4, and 8 respectively.
+We could expand such a scenario evenfor higher levels, but it is much more of coding (but still possible).
+
+So, we say that the user is limited to levels 0 and 1 at his time, and upon necessity for higher levels, should call us for support.
+Not to mention that GObject approach of displaying math expressions are really expensive in terms of speed of ciompilation and creation, and this is another main reason 
+that we did not implement leves higher than 1 at this time.
+
+- Another very powerful capability of GObject approach is creation of custom expressions from user side. 
+By default we implemented Integral, Summation, and Fraction in the code, but there is always a way for the user to create (properly) a
+custom matjh expression like Exponential or Logarithmic expressions. To make it simple at this moment, the user
+should once in the bginning of the creation of any expresion in the .Line file, register the expression based on the protocol below and later use it 
+like all other already implemented symbols like Summation, etc.
+
+- Custom made math expression based on GObject approach:
+	+ 
+	+ 
+
+
+
