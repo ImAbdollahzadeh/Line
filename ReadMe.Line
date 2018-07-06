@@ -15,7 +15,7 @@ syntax
 		[title__]The Main Title[]
 
 tutorial
-	- all tokens must be finished with an empty []
+	- all commands must be finished with an empty []
 	- all sentences in the .line file must be wrapped by two tokens in [].
 
 		The title sentence goes like this:  [title__]...[]
@@ -57,7 +57,7 @@ Example
 		>
 		>	U-shape: related to the initiation (phagophore formation)[]
 
-Tockens
+Tokens
 	[title__] : insert a title  
 	[subtit_] : insert a subtitle (without chapter number)
 	[body___] : accepts the body (or the regular sentences) of the text	    
@@ -222,7 +222,7 @@ The Concept of Graphical Objects in Line:
 		- 
 		-
 
-Now that weunderstood how Graphical Objects (or GObject) work, this is the time to explain how to use them in order to make very
+Now that we understood how Graphical Objects (or GObject) work, this is the time to explain how to use them in order to make very
 complicated formula.
 We found a generic way of representing any formula based on GObject, so that, one can always show a typical formula as:
 
