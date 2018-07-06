@@ -219,8 +219,18 @@ Formula (including integration and summation, but no fraction support)
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 The Concept of Graphical Objects in Line:
-		- 
-		-
+	- What does it mean when we say Graphical Object?
+		+ One of the major issues that should have been addressed is the implementation of complicated formula or
+		mathematical expressions. This is more than showing a linear formula like integrals, summations and fractions.
+		We noticed that it is almost impossible to have for instance one summation with either its down or up expression 
+		be another sophisticated math expression, implementation.
+		Then we need a platform to draw everything we need in our math expressions to be drawn in a customized way.
+		This is why this technique is called Graphical since we have access to a page as a graphical context. It has been controlled very 
+		carefully how and where to draw the user's input as a sophisticated math expression.
+		The term Object means that it coveres not only simple text or symbolic formats, but also another Graphical Object.
+		In fact this is a generic way of math expression implementation when the input for an expression could be another
+		expression per se.
+	- 
 
 Now that we understood how Graphical Objects (or GObject) work, this is the time to explain how to use them in order to make very
 complicated formula.
