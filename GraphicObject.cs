@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using ImageMagick;
 using PdfSharp.Pdf;
 using PdfSharp.Drawing;
@@ -7,10 +7,11 @@ namespace PDF_graphic
 {
     public enum SYMBOL
     {
-        GO_INT,
-        GO_SUM,
-        GO_FRC,
-        GO_OTHERS
+        GO_DEFAULT = 0x0000,
+        GO_INT     = 0x00A0,
+        GO_SUM     = 0x00A1,
+        GO_FRC     = 0x00A2,
+        GO_OTHERS  = 0x00A3,
     }
     class StringMaker
     {
@@ -24,13 +25,13 @@ namespace PDF_graphic
     }
     class GObject
     {
-        public string main;
+        public string  main;
         public GObject up;
         public GObject down;
-        public string symbol;
-        public int up_child;
-        public int down_child;
-        public SYMBOL id;
+        public string  symbol;
+        public bool    up_child;
+        public bool    down_child;
+        public SYMBOL  id;
     }
     class OFormul
     {
@@ -57,60 +58,58 @@ namespace PDF_graphic
         public void PdfSharp_PNG_handling()
         {
             PdfDocument document = new PdfDocument();
-            PdfPage page = document.AddPage();
-            page.Width = 595;
-            page.Height = 70;
+            PdfPage page  = document.AddPage();
+            page.Width    = 595;
+            page.Height   = 70;
             XGraphics gfx = XGraphics.FromPdfPage(page);
             XPdfFontOptions options = new XPdfFontOptions(PdfFontEncoding.Unicode, PdfFontEmbedding.Always);
-            XFont _18Font = new XFont("Times New Roman", 18, XFontStyle.Italic, options);
-            XFont _12Font = new XFont("Times New Roman", 12, XFontStyle.Italic, options);
-            XFont _6Font = new XFont("Times New Roman", 6, XFontStyle.Italic, options);
-            XFont _4Font = new XFont("Times New Roman", 4, XFontStyle.Italic, options);
-            double sum = 0.00;
-            int step = 1;
+            XFont _18Font           = new XFont("Times New Roman", 18, XFontStyle.Italic, options);
+            XFont _12Font           = new XFont("Times New Roman", 12, XFontStyle.Italic, options);
+            XFont _6Font            = new XFont("Times New Roman", 6, XFontStyle.Italic, options);
+            XFont _4Font            = new XFont("Times New Roman", 4, XFontStyle.Italic, options);
+            double sum   = 0.00;
+            int step     = 1;
             int ref_step = 0;
             for (int i = 0; i < formula_container.objects.Count; i++)
             {
-                if (formula_container.objects[i].up_child == 1 && formula_container.objects[i].down_child == 0)
+                if (formula_container.objects[i].up_child == true && formula_container.objects[i].down_child == false)
                 {
-                    gfx.DrawString(formula_container.objects[i].symbol, _18Font, XBrushes.Black, new XRect(sum + ref_step * 12.00, 12, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].main, _12Font, XBrushes.Black, new XRect(sum + step * 12.00, 15, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].up.symbol, _6Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 5, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString("      " + formula_container.objects[i].up.main, _6Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 5, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].up.up.main, _4Font, XBrushes.Black, new XRect(sum + step * 12.00, 2, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].down.main, _6Font, XBrushes.Black, new XRect(sum + step * 12.00 - 12, 31, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].up.down.main, _4Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 12, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].symbol,          _18Font, XBrushes.Black, new XRect(sum + ref_step * 12.00,      12, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].main,            _12Font, XBrushes.Black, new XRect(sum + step *     12.00,      15, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].up.symbol,       _6Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5,  5,  page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString("   " + formula_container.objects[i].up.main, _6Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5,  5,  page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].up.up.main,      _4Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 3,  2,  page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].down.main,       _6Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 12, 31, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].up.down.main,    _4Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5,  12, page.Width, page.Height), XStringFormats.TopLeft);
                     sum += gfx.MeasureString(formula_container.objects[i].main, _12Font).Width;
                     step++;
                     ref_step++;
                 }
-                else if (formula_container.objects[i].up_child == 0 && formula_container.objects[i].down_child == 1)
+                else if (formula_container.objects[i].up_child == false && formula_container.objects[i].down_child == true)
                 {
-                    gfx.DrawString(formula_container.objects[i].symbol, _18Font, XBrushes.Black, new XRect(sum + ref_step * 12.00, 12, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].main, _12Font, XBrushes.Black, new XRect(sum + step * 12.00, 15, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].down.symbol, _6Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 5, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString("      " + formula_container.objects[i].down.main, _6Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 5, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].down.up.main, _4Font, XBrushes.Black, new XRect(sum + step * 12.00, 2, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].down.main, _6Font, XBrushes.Black, new XRect(sum + step * 12.00 - 12, 31, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].down.down.main, _4Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 12, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].symbol,            _18Font, XBrushes.Black, new XRect(sum + ref_step * 12.00,      12, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].main,              _12Font, XBrushes.Black, new XRect(sum + step *     12.00,      15, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].down.symbol,       _6Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5,  5,  page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString("   " + formula_container.objects[i].down.main, _6Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5,  5,  page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].down.up.main,      _4Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 3,  2,  page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].up.main,           _6Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 12, 31, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].down.down.main,    _4Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5,  12, page.Width, page.Height), XStringFormats.TopLeft);
                     sum += gfx.MeasureString(formula_container.objects[i].main, _12Font).Width;
                     step++;
                     ref_step++;
                 }
-                else if (formula_container.objects[i].up_child == 1 && formula_container.objects[i].down_child == 1)
+                else if (formula_container.objects[i].up_child == true && formula_container.objects[i].down_child == true)
                 {
-                    gfx.DrawString(formula_container.objects[i].symbol, _18Font, XBrushes.Black, new XRect(sum + ref_step * 12.00, 12, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].main, _12Font, XBrushes.Black, new XRect(sum + step * 12.00, 15, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].up.symbol, _6Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 5, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString("      " + formula_container.objects[i].up.main, _6Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 5, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].up.up.main, _4Font, XBrushes.Black, new XRect(sum + step * 12.00, 2, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].down.main, _6Font, XBrushes.Black, new XRect(sum + step * 12.00 - 12, 31, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].up.down.main, _4Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 12, page.Width, page.Height), XStringFormats.TopLeft);
-                    sum += gfx.MeasureString(formula_container.objects[i].main, _12Font).Width;
-                    gfx.DrawString(formula_container.objects[i].down.symbol, _6Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 5, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString("      " + formula_container.objects[i].up.main, _6Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 5, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].down.up.main, _4Font, XBrushes.Black, new XRect(sum + step * 12.00, 2, page.Width, page.Height), XStringFormats.TopLeft);
-                    gfx.DrawString(formula_container.objects[i].down.down.main, _4Font, XBrushes.Black, new XRect(sum + step * 12.00 - 5, 12, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].symbol,            _18Font, XBrushes.Black, new XRect(sum + ref_step * 12.00,     12, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].main,              _12Font, XBrushes.Black, new XRect(sum + step *     12.00,     15, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].up.symbol,         _6Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5, 5,  page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString("   " + formula_container.objects[i].up.main,   _6Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5, 5,  page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].up.up.main,        _4Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 3, 2,  page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].up.down.main,      _4Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5, 12, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString("   " + formula_container.objects[i].down.main, _6Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5, 33, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].down.symbol,       _6Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5, 33, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].down.up.main,      _4Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 3, 30, page.Width, page.Height), XStringFormats.TopLeft);
+                    gfx.DrawString(formula_container.objects[i].down.down.main,    _4Font,  XBrushes.Black, new XRect(sum + step *     12.00 - 5, 40, page.Width, page.Height), XStringFormats.TopLeft);
                     sum += gfx.MeasureString(formula_container.objects[i].main, _12Font).Width;
                     step++;
                     ref_step++;
@@ -119,8 +118,8 @@ namespace PDF_graphic
                 {
                     if (formula_container.objects[i].id == SYMBOL.GO_FRC)
                     {
-                        gfx.DrawString(formula_container.objects[i].symbol, _18Font, XBrushes.Black, new XRect(sum + ref_step * 12.00, 0, page.Width, page.Height), XStringFormats.TopLeft);
-                        gfx.DrawString(formula_container.objects[i].up.main, _12Font, XBrushes.Black, new XRect(sum + ref_step * 12.00, 6, page.Width, page.Height), XStringFormats.TopLeft);
+                        gfx.DrawString(formula_container.objects[i].symbol,    _18Font, XBrushes.Black, new XRect(sum + ref_step * 12.00, 0,  page.Width, page.Height), XStringFormats.TopLeft);
+                        gfx.DrawString(formula_container.objects[i].up.main,   _12Font, XBrushes.Black, new XRect(sum + ref_step * 12.00, 6,  page.Width, page.Height), XStringFormats.TopLeft);
                         gfx.DrawString(formula_container.objects[i].down.main, _12Font, XBrushes.Black, new XRect(sum + ref_step * 12.00, 18, page.Width, page.Height), XStringFormats.TopLeft);
                         sum += gfx.MeasureString(formula_container.objects[i].main, _12Font).Width;
                         step++;
@@ -129,7 +128,7 @@ namespace PDF_graphic
                     else
                     {
                         gfx.DrawString(formula_container.objects[i].symbol, _18Font, XBrushes.Black, new XRect(sum + ref_step * 12.00, 15, page.Width, page.Height), XStringFormats.TopLeft);
-                        gfx.DrawString(formula_container.objects[i].main, _12Font, XBrushes.Black, new XRect(sum + step * 12.00, 15, page.Width, page.Height), XStringFormats.TopLeft);
+                        gfx.DrawString(formula_container.objects[i].main,   _12Font, XBrushes.Black, new XRect(sum + step     * 12.00, 15, page.Width, page.Height), XStringFormats.TopLeft);
                         sum += gfx.MeasureString(formula_container.objects[i].main, _12Font).Width;
                         step++;
                         ref_step++;
@@ -179,15 +178,15 @@ namespace PDF_graphic
                 }
                 j++;
                 tmp.main = t;
-                tmp.up_child = 0;
-                tmp.down_child = 0;
+                tmp.up_child = false;
+                tmp.down_child = false;
                 t = "";
 
                 //up
                 if (command[j] == '{')
                 {
                     j++;
-                    tmp.up_child = 1;
+                    tmp.up_child = true;
                     GObject new_tmp = new GObject();
                     GObject new_tmp_up = new GObject();
                     GObject new_tmp_down = new GObject();
@@ -239,7 +238,7 @@ namespace PDF_graphic
                 }
                 else
                 {
-                    tmp.up_child = 0;
+                    tmp.up_child = false;
                     while (command[j] != ',')
                     {
                         t += command[j];
@@ -250,29 +249,19 @@ namespace PDF_graphic
                     tmp.up = tmp_up;
                     tmp.up.main = t;
                     t = "";
-                    while (command[j] != ';')
-                    {
-                        t += command[j];
-                        j++;
-                    }
-                    Denom = t.Length;
-                    j++;
-                    tmp.down = tmp_down;
-                    tmp.down.main = t;
-                    t = "";
                 }
 
                 //down
                 if (command[j] == '{')
                 {
                     j++;
-                    tmp.down_child = 1;
+                    tmp.down_child = true;
                     GObject new_tmp = new GObject();
                     GObject new_tmp_up = new GObject();
                     GObject new_tmp_down = new GObject();
-                    tmp.up = new_tmp;
-                    tmp.up.up = new_tmp_up;
-                    tmp.up.down = new_tmp_down;
+                    tmp.down = new_tmp;
+                    tmp.down.up = new_tmp_up;
+                    tmp.down.down = new_tmp_down;
                     while (command[j] != '}')
                     {
                         while (command[j] != '.')
@@ -280,12 +269,12 @@ namespace PDF_graphic
                             t += command[j];
                             j++;
                         }
-                        if (t == "INT") tmp.up.symbol = StringMaker.symbol_maker("∫ ", 1);
-                        else if (t == "SUM") tmp.up.symbol = StringMaker.symbol_maker("Σ ", 1);
+                        if      (t == "INT") tmp.down.symbol = StringMaker.symbol_maker("∫ ", 1);
+                        else if (t == "SUM") tmp.down.symbol = StringMaker.symbol_maker("Σ ", 1);
                         else if (t == "FRC")
                         {
-                            tmp.up.symbol = "FRCT_TMP_SYMBOL";
-                            tmp.up.id = SYMBOL.GO_FRC;
+                            tmp.down.symbol = "FRCT_TMP_SYMBOL";
+                            tmp.down.id = SYMBOL.GO_FRC;
                         }
                         j++;
                         t = "";
@@ -295,7 +284,7 @@ namespace PDF_graphic
                             j++;
                         }
                         j++;
-                        tmp.up.main = t;
+                        tmp.down.main = t;
                         t = "";
                         while (command[j] != ',')
                         {
@@ -303,7 +292,7 @@ namespace PDF_graphic
                             j++;
                         }
                         j++;
-                        tmp.up.up.main = t;
+                        tmp.down.up.main = t;
                         t = "";
                         while (command[j] != ';')
                         {
@@ -311,23 +300,14 @@ namespace PDF_graphic
                             j++;
                         }
                         j++;
-                        tmp.up.down.main = t;
+                        tmp.down.down.main = t;
                         t = "";
                     }
                     j += 2;
-                    while (command[j] != ';')
-                    {
-                        t += command[j];
-                        j++;
-                    }
-                    j++;
-                    tmp.down = tmp_down;
-                    tmp.down.main = t;
-                    t = "";
                 }
                 else
                 {
-                    tmp.down_child = 0;
+                    tmp.down_child = false;
                     while (command[j] != ';')
                     {
                         t += command[j];
