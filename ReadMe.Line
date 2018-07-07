@@ -225,13 +225,42 @@ The Concept of Graphical Objects in Line:
 		We noticed that it is almost impossible to have for instance one summation with either its down or up expression 
 		be another sophisticated math expression, implementation.
 		Then we need a platform to draw everything we need in our math expressions to be drawn in a customized way.
-		This is why this technique is called Graphical since we have access to a page as a graphical context. It has been controlled very 
-		carefully how and where to draw the user's input as a sophisticated math expression.
+		This is why this technique is called Graphical since we have access to a page as a graphical context. It has been 
+		controlled very carefully how and where to draw the user's input as a sophisticated math expression.
 		The term Object means that it coveres not only simple text or symbolic formats, but also another Graphical Object.
 		In fact this is a generic way of math expression implementation when the input for an expression could be another
 		expression per se.
-	- 
-
+	- Which specific problem GObjects make if not properly be used?
+		+ The cost of using GObjects for any reason is that the rendering phase takes longer time to get completed.
+		This make is really specific when to use them as the way of construting mathexpressions.
+		For instance, if one can do the job with te use of simple texts or math expression with maximum level 0, it would be
+		not wise to use GObjects. But in case, user only needs them to construct the expression, that should be the very advance way
+		of implementation.
+	- Is there a way that user can get in touch with GObjects from .Line file?
+		+ Of course there is. As said before, only integral, summation and fractions have been by default implemented with the use of GObjects,
+		but user can start to think of making new expressions in so-calles "SudB" manner and use them later exactly like other GObjects.
+		To do so, first user has to declare the needed expression with only two parameters. First, a given name and second, a symbol.
+		Let's think of exponential as a new math expression that we'd like to make as GObject. The name could be EXP, and the symbol would be "e".
+		In this way, user had been completely able to intract with the GObject and tries to modify its default table of objects.
+	- Which new tokens have been dedicated for GObject usage?
+		+ As a rule, all GObject commands start with "GO" in their beginning. Like all other tokens, they must be wrapped in []
+		and the command should be terminated with an empty [].
+		The new set of GObjects relarted tokens are:
+			> [GOForm_] and [GOReg__]
+			>> GoForm_, is simply the way to let Line gets the expression as GO stands for GObject (or Graphical Object) 
+			and Form stands for formula, so in total it means "Graphical Object-approach for formula"
+			>> [GOReg__] is the registration of a new expression making by user (see above in exponential example).
+	- How syntactically the new GObject tokens work?
+		+ [GOReg__]_SYMBOL_,_NAME_.[]
+		_SYMBOL_ basically is a symbol that user would like to give such as "e" or "log" or even "USER_SYMBOL", and
+		_NAME_ is a command name that user can later on call in .Line file in order to construct the expression. For instance
+		EXP, or LOG, or USS which could be stood for exponential, logarithm, and user_symbol in the case of above provided examples.
+		
+		+[GOForm_]INT.f(x)dx,{INT.g(x - 1)dx,1,0;},-&<64>&;[]
+		Like normal formula we have INT. which is the declaration of integral.
+		f(x)dx is the body of integral, then comes a GObject wrapped in {}, as the upper part of integral, which is another math expression and MUST be terminated with ;
+		and last is the lower part of the integral, that can be a text or another GObject like {SUM.1,i = 0,Ni;}
+			
 Now that we understood how Graphical Objects (or GObject) work, this is the time to explain how to use them in order to make very
 complicated formula.
 We found a generic way of representing any formula based on GObject, so that, one can always show a typical formula as:
