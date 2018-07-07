@@ -249,7 +249,7 @@ The Concept of Graphical Objects in Line:
 			> [GOForm_] and [GOReg__]
 			>> GoForm_, is simply the way to let Line gets the expression as GO stands for GObject (or Graphical Object) 
 			and Form stands for formula, so in total it means "Graphical Object-approach for formula"
-			>> [GOReg__] is the registration of a new expression making by user (see above in exponential example).
+			>> GOReg__ is the registration of a new expression making by user (see above in exponential example).
 	- How syntactically the new GObject tokens work?
 		+ [GOReg__]_SYMBOL_,_NAME_.[]
 		_SYMBOL_ basically is a symbol that user would like to give such as "e" or "log" or even "USER_SYMBOL", and
@@ -260,7 +260,10 @@ The Concept of Graphical Objects in Line:
 		Like normal formula we have INT. which is the declaration of integral.
 		f(x)dx is the body of integral, then comes a GObject wrapped in {}, as the upper part of integral, which is another math expression and MUST be terminated with ;
 		and last is the lower part of the integral, that can be a text or another GObject like {SUM.1,i = 0,Ni;}
-			
+	>>> One example for GObject usage:
+		- suppose we have a command like below in our .Line file:
+		[GOForm_]SUM.H(i) + N + ,{INT.f(x)dx,1,0;},{SUM.i + &<14>&N,+&<64>&,i = 0;};INT.f(y)dy,{INT.f(z)dz,1,0;},0;[]
+		In order to see the result, please look at the attached GObject_demonstration.png file
 Now that we understood how Graphical Objects (or GObject) work, this is the time to explain how to use them in order to make very
 complicated formula.
 We found a generic way of representing any formula based on GObject, so that, one can always show a typical formula as:
